@@ -1,4 +1,5 @@
 import { Menu, Sun, Moon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useTheme } from '../../context/ThemeContext'
 
 export default function TopBar({ onMenuClick }) {
@@ -10,13 +11,13 @@ export default function TopBar({ onMenuClick }) {
         <Menu size={22} />
       </button>
 
-      <div className="topbar__brand">
+      <Link to="/" className="topbar__brand">
         <div className="topbar__pokeball">
           <div className="topbar__pokeball-line" />
           <div className="topbar__pokeball-btn" />
         </div>
         <span className="topbar__title">TypeDex</span>
-      </div>
+      </Link>
 
       <button className="topbar__theme-btn" onClick={toggleTheme} aria-label="Toggle theme">
         {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}

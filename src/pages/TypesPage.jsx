@@ -1,10 +1,16 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import TypeGrid from '../components/TypeGrid'
 import MatchupDisplay from '../components/MatchupDisplay'
 import Toast, { useToast } from '../components/Toast'
+import { TYPES } from '../data/typeChart'
 
 export default function TypesPage() {
-  const [selectedTypes, setSelectedTypes] = useState([])
+  const [searchParams] = useSearchParams()
+  const [selectedTypes, setSelectedTypes] = useState(() => {
+    const t = searchParams.get('type')
+    return t && TYPES.includes(t) ? [t] : []
+  })
   const { toast, showToast } = useToast()
 
   return (
