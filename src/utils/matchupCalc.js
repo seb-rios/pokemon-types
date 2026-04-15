@@ -43,3 +43,17 @@ export function getTypeAdvantageScore(attackerTypes, defenderTypes) {
     )
   )
 }
+
+// Types that deal ≥2× damage to at least one of the defending (selected) types
+export function getCounterTypes(selectedTypes) {
+  return TYPES.filter(attackType =>
+    selectedTypes.some(defType => getEffectiveness(attackType, defType) >= 2)
+  )
+}
+
+// Types that take ≥2× damage from at least one of the attacking (selected) types
+export function getVulnerableTypes(selectedTypes) {
+  return TYPES.filter(defType =>
+    selectedTypes.some(atkType => getEffectiveness(atkType, defType) >= 2)
+  )
+}

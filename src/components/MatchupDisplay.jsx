@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import TypeBadge from './TypeBadge'
 import MatchupSection from './MatchupSection'
+import TypePokemonShowcase from './TypePokemonShowcase'
 import { getOffensiveMatchups, getDefensiveMatchups } from '../utils/matchupCalc'
 
 export default function MatchupDisplay({ selectedTypes }) {
@@ -38,6 +39,8 @@ export default function MatchupDisplay({ selectedTypes }) {
           />
         </div>
       </div>
+
+      <TypePokemonShowcase selectedTypes={selectedTypes} />
     </motion.div>
   )
 }
