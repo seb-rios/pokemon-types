@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 import { usePokemon } from '../hooks/usePokemon'
 import PokemonSlot from '../components/battle/PokemonSlot'
 import BattleResult from '../components/battle/BattleResult'
+import SEO from '../components/SEO'
 
 export default function BattlePage() {
   const [nameA, setNameA] = useState(null)
@@ -15,6 +16,11 @@ export default function BattlePage() {
 
   return (
     <div className="page battle-page">
+      <SEO
+        title="Battle"
+        description="Compare two Pokémon head-to-head and see who has the type advantage. Pick your team and find the best matchup."
+        path="/battle"
+      />
       <div className="page__header">
         <h1 className="page__title">Battle</h1>
         <p className="page__subtitle">Pick two Pokémon to see who has the type edge</p>

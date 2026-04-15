@@ -4,6 +4,7 @@ import PokemonSearch from '../components/PokemonSearch'
 import MatchupDisplay from '../components/MatchupDisplay'
 import TypeBadge from '../components/TypeBadge'
 import { usePokemon } from '../hooks/usePokemon'
+import SEO from '../components/SEO'
 
 function PokemonCard({ name }) {
   const { data, isLoading, isError } = usePokemon(name)
@@ -69,6 +70,11 @@ export default function PokemonPage() {
 
   return (
     <div className="page pokemon-page">
+      <SEO
+        title="Pokédex"
+        description="Search any Pokémon by name and instantly see its type weaknesses, resistances, and immunities. Powered by PokéAPI."
+        path="/pokemon"
+      />
       <div className="page__header">
         <h1 className="page__title">Search a Pokémon</h1>
         <p className="page__subtitle">Find any Pokémon and see its type matchups</p>

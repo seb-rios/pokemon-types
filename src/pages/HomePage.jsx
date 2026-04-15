@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import MiniTypeGrid from '../components/home/MiniTypeGrid'
 import FeaturedMatchup from '../components/home/FeaturedMatchup'
 import DidYouKnow from '../components/home/DidYouKnow'
+import SEO from '../components/SEO'
 
 const SILHOUETTES = [
   { id: 94,  alt: 'Gengar',   style: { top: '-20px', right: '-40px', width: '300px', opacity: 1 } },
@@ -41,6 +42,10 @@ export default function HomePage() {
   }
 
   return (
+    <>
+      <SEO
+        description="TypeDex is a Pokémon type effectiveness tool. Explore the 18-type chart, look up any Pokémon's weaknesses and resistances, and simulate type-advantage battles."
+      />
     <div className="home-page">
       {/* Hero */}
       <section className="home-hero">
@@ -104,5 +109,6 @@ export default function HomePage() {
         </section>
       </div>
     </div>
+    </>
   )
 }
