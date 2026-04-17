@@ -14,6 +14,7 @@ dist-ssr
 
 # Claude context
 .claude/
+.remember/
 
 # Editor directories and files
 .vscode/*
