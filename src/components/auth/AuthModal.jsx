@@ -101,7 +101,6 @@ export default function AuthModal({ isOpen, onClose }) {
                 <h2 className="auth-modal__title">Sign in</h2>
                 <div className="auth-social-btns">
                   <SocialButton provider="google" onClick={() => handleSocial('google')} disabled={loading} />
-                  <SocialButton provider="discord" onClick={() => handleSocial('discord')} disabled={loading} />
                 </div>
                 <div className="auth-divider"><span>or</span></div>
                 <form onSubmit={handleLogin} className="auth-form">
@@ -127,7 +126,6 @@ export default function AuthModal({ isOpen, onClose }) {
                 <h2 className="auth-modal__title">Create account</h2>
                 <div className="auth-social-btns">
                   <SocialButton provider="google" onClick={() => handleSocial('google')} disabled={loading} />
-                  <SocialButton provider="discord" onClick={() => handleSocial('discord')} disabled={loading} />
                 </div>
                 <div className="auth-divider"><span>or</span></div>
                 {success ? (
