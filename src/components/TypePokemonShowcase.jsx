@@ -9,6 +9,8 @@ import { useRegionalDex } from '../hooks/useRegionalDex'
 const SPRITE_URL = id =>
   `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
 
+// ── Fetch helpers ─────────────────────────────────────────────────
+
 async function fetchPokemonByType(typeName) {
   const res = await fetch(`https://pokeapi.co/api/v2/type/${typeName}`)
   const data = await res.json()
@@ -21,7 +23,21 @@ async function fetchPokemonByType(typeName) {
     .sort((a, b) => a.id - b.id)
 }
 
-function queryConfig(typeName) {
+async function fetchGeneration(genNumber) {
+  const res = await fetch(`https://pokeapi.co/api/v2/generation/${genNumber}`)
+  if (!res.ok) throw new Error(`Failed to fetch generation ${genNumber}`)
+  const data = await res.json()
+  return new Set(data.pokemon_species.map(s => s.name))
+}
+
+async function fetchSpeciesLegendary(name) {
+  const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${name}`)
+  if (!res.ok) throw new Error(`Species ${name} fetch failed`)
+  const { is_legendary, is_mythical } = await res.json()
+  return { is_legendary, is_mythical }
+}
+
+function typeQueryConfig(typeName) {
   return {
     queryKey: ['pokemon-by-type', typeName],
     queryFn: () => fetchPokemonByType(typeName),
@@ -212,28 +228,74 @@ export default function TypePokemonShowcase({ selectedTypes }) {
     })
   }
 
-  function applyFilters(list) {
+  // ── Phase 1: Fetch Pokémon by type ────────────────────────────
+
+  const counterTypes = getCounterTypes(selectedTypes)
+  const vulnerableTypes = getVulnerableTypes(selectedTypes)
+  const allTypes = [...new Set([...selectedTypes, ...counterTypes, ...vulnerableTypes])]
+
+  const typeQueries = useQueries({ queries: allTypes.map(typeQueryConfig) })
+  const typeQueryMap = Object.fromEntries(allTypes.map((type, i) => [type, typeQueries[i]]))
+
+  // ── Phase 2: Fetch generation species sets from PokéAPI ───────
+
+  const selectedGensArray = [...selectedGens]
+  const genQueries = useQueries({
+    queries: selectedGensArray.map(gen => ({
+      queryKey: ['generation', gen],
+      queryFn: () => fetchGeneration(gen),
+      staleTime: Infinity,
+      gcTime: Infinity,
+      enabled: selectedGens.size > 0,
+    }))
+  })
+  const genDataMap = Object.fromEntries(selectedGensArray.map((gen, i) => [gen, genQueries[i]]))
+
+  // ── Phase 3: Compute raw Pokémon lists from type queries ──────
+
+  const selectedTypeQueries = selectedTypes.map(t => typeQueryMap[t])
+  const typeLoading = selectedTypeQueries.some(q => q?.isLoading)
+
+  let rawTypePokemon = []
+  if (!typeLoading) {
+    if (selectedTypes.length === 1) {
+      rawTypePokemon = selectedTypeQueries[0]?.data ?? []
+    } else {
+      const ids = new Set((selectedTypeQueries[0]?.data ?? []).map(p => p.id))
+      rawTypePokemon = (selectedTypeQueries[1]?.data ?? []).filter(p => ids.has(p.id))
+    }
+  }
+
+  const counterTypeQueries = counterTypes.map(t => typeQueryMap[t])
+  const counterLoading = counterTypeQueries.some(q => q?.isLoading)
+  const rawCounterPokemon = counterLoading ? [] : combinePokemon(counterTypeQueries)
+
+  const vulnerableTypeQueries = vulnerableTypes.map(t => typeQueryMap[t])
+  const vulnerableLoading = vulnerableTypeQueries.some(q => q?.isLoading)
+  const rawVulnerablePokemon = vulnerableLoading ? [] : combinePokemon(vulnerableTypeQueries)
+
+  // ── Phase 4: Apply base filters (gen, game, forms, evo) ───────
+
+  function applyBaseFilters(list) {
     return list.filter(p => {
       // Base forms: PokéAPI uses IDs > 10000 for megas, gigantamax, regional forms
       if (baseFormsOnly && p.id > 10000) return false
 
-      // Generation range
+      // Generation — use API Set when available, fall back to ID range
       if (selectedGens.size > 0) {
-        const inRange = [...selectedGens].some(gen => {
+        const inAnyGen = selectedGensArray.some(gen => {
+          const q = genDataMap[gen]
+          if (q?.data) return q.data.has(p.name)
           const [min, max] = GEN_RANGES[gen]
           return p.id >= min && p.id <= max
         })
-        if (!inRange) return false
+        if (!inAnyGen) return false
       }
 
       // Game / regional dex (only filter when data has loaded)
       if (selectedGame && regionalDexNames) {
         if (!regionalDexNames.has(p.name)) return false
       }
-
-      // Legendary filter
-      if (legendary === 'only' && !LEGENDARY_IDS.has(p.id)) return false
-      if (legendary === 'exclude' && LEGENDARY_IDS.has(p.id)) return false
 
       // Final evo
       if (finalEvoOnly && NOT_FULLY_EVOLVED.has(p.id)) return false
@@ -242,41 +304,63 @@ export default function TypePokemonShowcase({ selectedTypes }) {
     })
   }
 
-  const counterTypes = getCounterTypes(selectedTypes)
-  const vulnerableTypes = getVulnerableTypes(selectedTypes)
+  const baseTypePokemon = applyBaseFilters(rawTypePokemon)
+  const baseCounterPokemon = applyBaseFilters(rawCounterPokemon)
+  const baseVulnerablePokemon = applyBaseFilters(rawVulnerablePokemon)
 
-  const allTypes = [...new Set([...selectedTypes, ...counterTypes, ...vulnerableTypes])]
-  const queries = useQueries({ queries: allTypes.map(queryConfig) })
-  const queryMap = Object.fromEntries(allTypes.map((type, i) => [type, queries[i]]))
+  // ── Phase 5: Fetch species legendary flags ────────────────────
+  // Only when legendary filter is active, only for base-filtered Pokémon
 
-  // Section 1: Pokémon of selected type(s)
-  const typeQueries = selectedTypes.map(t => queryMap[t])
-  const typeLoading = typeQueries.some(q => q.isLoading)
-  let rawTypePokemon = []
-  if (!typeLoading) {
-    if (selectedTypes.length === 1) {
-      rawTypePokemon = typeQueries[0]?.data ?? []
-    } else {
-      const ids = new Set((typeQueries[0]?.data ?? []).map(p => p.id))
-      rawTypePokemon = (typeQueries[1]?.data ?? []).filter(p => ids.has(p.id))
-    }
+  const needsLegendaryCheck = legendary !== 'all'
+  const allBaseFiltered = needsLegendaryCheck
+    ? [...new Map(
+        [...baseTypePokemon, ...baseCounterPokemon, ...baseVulnerablePokemon]
+          .map(p => [p.name, p])
+      ).values()]
+    : []
+
+  const speciesQueries = useQueries({
+    queries: allBaseFiltered.map(p => ({
+      queryKey: ['pokemon-species-legendary', p.name],
+      queryFn: () => fetchSpeciesLegendary(p.name),
+      staleTime: Infinity,
+      gcTime: Infinity,
+      enabled: needsLegendaryCheck,
+      retry: 1,
+    }))
+  })
+
+  const speciesMap = Object.fromEntries(
+    allBaseFiltered.map((p, i) => [p.name, speciesQueries[i]?.data])
+  )
+
+  // Are any species queries still loading (only relevant when filter is active)?
+  const speciesLoading = needsLegendaryCheck && speciesQueries.some(q => q.isLoading)
+
+  // ── Phase 6: Apply legendary filter ───────────────────────────
+
+  function applyLegendaryFilter(list) {
+    if (legendary === 'all') return list
+    return list.filter(p => {
+      const species = speciesMap[p.name]
+      const isLegend = species != null
+        ? species.is_legendary || species.is_mythical
+        : LEGENDARY_IDS.has(p.id)   // fallback when API errored or not yet loaded
+      if (legendary === 'only') return isLegend
+      if (legendary === 'exclude') return !isLegend
+      return true
+    })
   }
-  const typePokemon = applyFilters(rawTypePokemon)
+
+  // Final lists — hold off on legendary filter until species data is ready
+  const typePokemon = speciesLoading ? [] : applyLegendaryFilter(baseTypePokemon)
+  const counterPokemon = speciesLoading ? [] : applyLegendaryFilter(baseCounterPokemon)
+  const vulnerablePokemon = speciesLoading ? [] : applyLegendaryFilter(baseVulnerablePokemon)
 
   const typeTitle =
     selectedTypes.length === 1
       ? `${capitalize(selectedTypes[0])} Pokémon`
       : `${selectedTypes.map(capitalize).join(' / ')} Pokémon`
-
-  // Section 2: Counters
-  const counterQueries = counterTypes.map(t => queryMap[t])
-  const counterLoading = counterQueries.some(q => q.isLoading)
-  const counterPokemon = counterLoading ? [] : applyFilters(combinePokemon(counterQueries))
-
-  // Section 3: Vulnerable
-  const vulnerableQueries = vulnerableTypes.map(t => queryMap[t])
-  const vulnerableLoading = vulnerableQueries.some(q => q.isLoading)
-  const vulnerablePokemon = vulnerableLoading ? [] : applyFilters(combinePokemon(vulnerableQueries))
 
   const hasAnyContent =
     typeLoading || typePokemon.length > 0 ||
@@ -303,17 +387,17 @@ export default function TypePokemonShowcase({ selectedTypes }) {
       <PokemonRow
         title={typeTitle}
         pokemonList={typePokemon}
-        isLoading={typeLoading}
+        isLoading={typeLoading || speciesLoading}
       />
       <PokemonRow
         title="Strong against these types"
         pokemonList={counterPokemon}
-        isLoading={counterLoading}
+        isLoading={counterLoading || speciesLoading}
       />
       <PokemonRow
         title="Weak against these types"
         pokemonList={vulnerablePokemon}
-        isLoading={vulnerableLoading}
+        isLoading={vulnerableLoading || speciesLoading}
       />
     </div>
   )
