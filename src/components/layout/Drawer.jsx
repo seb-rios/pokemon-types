@@ -1,10 +1,17 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
-import { Grid3X3, Search, Sun, Moon, Swords, Home } from 'lucide-react'
+import { Grid3X3, Search, Sun, Moon, Swords, Home, LogIn, LogOut, User } from 'lucide-react'
 import { useTheme } from '../../context/ThemeContext'
+import { useAuth } from '../../context/AuthContext'
 
-export default function Drawer({ isOpen, onClose }) {
+export default function Drawer({ isOpen, onClose, onSignInClick }) {
   const { theme, toggleTheme } = useTheme()
+  const { user, signOut } = useAuth()
+
+  async function handleSignOut() {
+    await signOut()
+    onClose()
+  }
 
   return (
     <AnimatePresence>
@@ -89,6 +96,29 @@ export default function Drawer({ isOpen, onClose }) {
             </ul>
 
             <div className="drawer__footer">
+              {user ? (
+                <div className="drawer__auth">
+                  <div className="drawer__user">
+                    <div className="drawer__avatar">{user.email[0].toUpperCase()}</div>
+                    <span className="drawer__user-email">{user.email}</span>
+                  </div>
+                  <button className="drawer__sign-out" onClick={handleSignOut}>
+                    <LogOut size={16} />
+                    <span>Sign out</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="drawer__auth">
+                  <button className="drawer__sign-in" onClick={onSignInClick}>
+                    <LogIn size={18} />
+                    <span>Sign in</span>
+                  </button>
+                  <button className="drawer__create-account" onClick={onSignInClick}>
+                    <User size={16} />
+                    <span>Create account</span>
+                  </button>
+                </div>
+              )}
               <button className="drawer__theme-toggle" onClick={toggleTheme}>
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                 <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
