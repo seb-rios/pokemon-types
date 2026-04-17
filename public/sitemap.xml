@@ -2,25 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://pokemon-types-liart.vercel.app/</loc>
+    <loc>https://www.poketypedex.com/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://pokemon-types-liart.vercel.app/types</loc>
+    <loc>https://www.poketypedex.com/types</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://pokemon-types-liart.vercel.app/pokemon</loc>
+    <loc>https://www.poketypedex.com/pokemon</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://pokemon-types-liart.vercel.app/battle</loc>
+    <loc>https://www.poketypedex.com/battle</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

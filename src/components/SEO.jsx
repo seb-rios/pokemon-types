@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 
 const SITE_NAME = 'TypeDex'
-const BASE_URL = 'https://pokemon-types-liart.vercel.app'
+const BASE_URL = 'https://www.poketypedex.com'
 const DEFAULT_IMAGE = `${BASE_URL}/og-image.png`
 
 export default function SEO({ title, description, path = '/', image = DEFAULT_IMAGE }) {
