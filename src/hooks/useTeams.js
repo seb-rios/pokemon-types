@@ -53,28 +53,46 @@ export function useSharedTeam(shareToken) {
   })
 }
 
+function friendlyError(error) {
+  if (!error) return 'Something went wrong. Please try again.'
+  const msg = error.message ?? ''
+  if (msg.includes('row-level security') || msg.includes('policy')) {
+    return 'You need to be signed in to save teams. Please sign in and try again.'
+  }
+  if (msg.includes('JWT') || msg.includes('token') || msg.includes('auth')) {
+    return 'Your session has expired. Please sign in again.'
+  }
+  if (msg.includes('network') || msg.includes('fetch')) {
+    return 'Network error. Please check your connection and try again.'
+  }
+  return msg || 'Something went wrong. Please try again.'
+}
+
 export function useCreateTeam() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: async ({ name, slots }) => {
+      const { data: { user }, error: authError } = await supabase.auth.getUser()
+      if (authError || !user) throw new Error('You need to be signed in to create a team.')
+
       const { data: existing, error: countError } = await supabase
         .from('teams')
         .select('id')
-      if (countError) throw countError
+      if (countError) throw new Error(friendlyError(countError))
       if (existing.length >= FREE_TEAM_LIMIT) {
-        throw new Error(`Free plan is limited to ${FREE_TEAM_LIMIT} teams.`)
+        throw new Error(`You've reached the ${FREE_TEAM_LIMIT}-team limit on the free plan.`)
       }
 
       const { data: team, error: teamError } = await supabase
         .from('teams')
-        .insert({ name })
+        .insert({ name, user_id: user.id })
         .select()
         .single()
-      if (teamError) throw teamError
+      if (teamError) throw new Error(friendlyError(teamError))
 
       const slotRows = slots.map((s, i) => ({ ...s, team_id: team.id, slot_index: i }))
       const { error: slotsError } = await supabase.from('team_slots').insert(slotRows)
-      if (slotsError) throw slotsError
+      if (slotsError) throw new Error(friendlyError(slotsError))
 
       return team
     },

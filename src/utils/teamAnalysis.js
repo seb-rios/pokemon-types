@@ -5,7 +5,7 @@ const STAT_NAMES = ['hp', 'attack', 'defense', 'special-attack', 'special-defens
 
 // For each of 18 types, how many team members are weak (2x+) or resistant (0.5x-)
 export function getTeamTypeCoverage(slots) {
-  const filled = slots.filter(s => s.pokemon_types?.length)
+  const filled = slots.filter(s => s?.pokemon_types?.length)
   if (!filled.length) return TYPES.map(type => ({ type, weakCount: 0, resistCount: 0, immuneCount: 0, total: 0 }))
 
   return TYPES.map(attackingType => {
@@ -28,7 +28,7 @@ export function getTeamTypeCoverage(slots) {
 // Which types can the team hit super-effectively via their moves
 export function getTeamOffensiveCoverage(slots) {
   const moveTypes = slots
-    .flatMap(s => s.moves || [])
+    .flatMap(s => s?.moves || [])
     .filter(m => m.category !== 'status' && m.type)
     .map(m => m.type)
   return [...new Set(moveTypes)]
@@ -36,7 +36,7 @@ export function getTeamOffensiveCoverage(slots) {
 
 // Average base stats across all filled slots
 export function getTeamStatTotals(slots) {
-  const filled = slots.filter(s => s.stats?.length)
+  const filled = slots.filter(s => s?.stats?.length)
   if (!filled.length) return STAT_NAMES.map(name => ({ name, avg: 0 }))
 
   return STAT_NAMES.map(statName => {

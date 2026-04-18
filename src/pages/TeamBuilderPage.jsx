@@ -180,6 +180,7 @@ export default function TeamBuilderPage() {
             <div className="team-builder__right">
               {activeSlot !== null ? (
                 <SlotEditor
+                  key={activeSlot}
                   slotIndex={activeSlot}
                   slot={slots[activeSlot]}
                   onChange={handleSlotChange}

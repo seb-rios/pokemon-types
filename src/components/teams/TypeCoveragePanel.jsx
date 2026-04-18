@@ -3,7 +3,7 @@ import TypeBadge from '../TypeBadge'
 
 export default function TypeCoveragePanel({ slots }) {
   const coverage = getTeamTypeCoverage(slots)
-  const filledCount = slots.filter(s => s.pokemon_types?.length).length
+  const filledCount = slots.filter(s => s?.pokemon_types?.length).length
 
   if (!filledCount) return null
 

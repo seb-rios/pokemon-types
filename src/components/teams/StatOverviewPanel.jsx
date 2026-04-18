@@ -20,7 +20,7 @@ const STAT_COLORS = {
 
 export default function StatOverviewPanel({ slots }) {
   const stats = getTeamStatTotals(slots)
-  const filledCount = slots.filter(s => s.stats?.length).length
+  const filledCount = slots.filter(s => s?.stats?.length).length
   if (!filledCount) return null
 
   const maxAvg = Math.max(...stats.map(s => s.avg), 1)

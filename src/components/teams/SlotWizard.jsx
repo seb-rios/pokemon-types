@@ -21,6 +21,7 @@ export default function SlotWizard({ slots, currentStep, onStepChange, onSlotCha
       <p className="slot-wizard__step-label">Slot {currentStep + 1} of {total}</p>
 
       <SlotEditor
+        key={currentStep}
         slotIndex={currentStep}
         slot={slots[currentStep]}
         onChange={onSlotChange}

@@ -36,20 +36,27 @@ export default function SlotEditor({ slotIndex, slot, onChange, onClose }) {
 
   const { data: pokemon } = usePokemon(selectedPokemonName)
 
-  // When pokemon data loads, push updated slot data up
+  // Track the previous pokemon name so we know when the pokemon actually changed
+  const prevNameRef = useRef(selectedPokemonName)
+
   useEffect(() => {
-    if (!pokemon) return
+    if (!pokemon || !selectedPokemonName) return
+    // Confirm loaded data matches what's currently selected (guards against stale responses)
+    if (pokemon.name.toLowerCase() !== selectedPokemonName.toLowerCase()) return
+    const pokemonChanged = prevNameRef.current !== selectedPokemonName
+    prevNameRef.current = selectedPokemonName
     onChange(slotIndex, {
       pokemon_id: pokemon.id,
       pokemon_name: pokemon.name,
       pokemon_types: pokemon.types,
       stats: pokemon.stats,
-      moves: slot?.moves ?? [],
+      // Reset moves when the pokemon changes; preserve them on re-renders of the same pokemon
+      moves: pokemonChanged ? [] : (slot?.moves ?? []),
       item_id: slot?.item_id ?? null,
       item_name: slot?.item_name ?? null,
       item_sprite: slot?.item_sprite ?? null,
     })
-  }, [pokemon])
+  }, [pokemon, selectedPokemonName])
 
   function selectPokemon(name) {
     const display = name.charAt(0).toUpperCase() + name.slice(1)
