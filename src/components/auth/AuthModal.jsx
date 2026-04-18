@@ -72,7 +72,6 @@ export default function AuthModal({ isOpen, onClose }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
           <motion.div
             className="auth-modal-overlay"
             initial={{ opacity: 0 }}
@@ -80,8 +79,7 @@ export default function AuthModal({ isOpen, onClose }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-          />
-
+          >
           <motion.div
             className="auth-modal"
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
@@ -90,6 +88,7 @@ export default function AuthModal({ isOpen, onClose }) {
             transition={{ duration: 0.2 }}
             role="dialog"
             aria-modal="true"
+            onClick={e => e.stopPropagation()}
           >
             <button className="auth-modal__close" onClick={onClose} aria-label="Close">
               <X size={18} />
@@ -170,7 +169,7 @@ export default function AuthModal({ isOpen, onClose }) {
               </>
             )}
           </motion.div>
-        </>
+          </motion.div>
       )}
     </AnimatePresence>
   )
