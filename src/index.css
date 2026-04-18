@@ -1753,12 +1753,14 @@ img {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 201;
-  background: var(--card);
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 2rem;
-  width: 100%;
+  width: calc(100% - 2rem);
   max-width: 420px;
+  max-height: 90dvh;
+  overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
@@ -1810,7 +1812,7 @@ img {
   padding: 0.6rem 1rem;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--bg);
+  background: var(--bg-primary);
   color: var(--text-primary);
   font-size: 0.875rem;
   font-weight: 500;
@@ -1857,7 +1859,7 @@ img {
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--bg);
+  background: var(--input-bg);
   color: var(--text-primary);
   font-size: 0.875rem;
   font-family: inherit;
