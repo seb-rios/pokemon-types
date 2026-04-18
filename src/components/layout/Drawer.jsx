@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
-import { Grid3X3, Search, Sun, Moon, Swords, Home } from 'lucide-react'
+import { Grid3X3, Search, Sun, Moon, Swords, Home, Users } from 'lucide-react'
 import { useTheme } from '../../context/ThemeContext'
 
 export default function Drawer({ isOpen, onClose }) {
@@ -84,6 +84,18 @@ export default function Drawer({ isOpen, onClose }) {
                 >
                   <Swords size={18} />
                   <span>Battle</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/teams"
+                  className={({ isActive }) =>
+                    `drawer__link ${isActive ? 'drawer__link--active' : ''}`
+                  }
+                  onClick={onClose}
+                >
+                  <Users size={18} />
+                  <span>My Teams</span>
                 </NavLink>
               </li>
             </ul>
