@@ -9,11 +9,13 @@ export default function Layout({ children }) {
 
   return (
     <div className="layout">
-      <TopBar onMenuClick={() => setDrawerOpen(true)} />
+      <TopBar
+        onMenuClick={() => setDrawerOpen(true)}
+        onSignInClick={() => setAuthOpen(true)}
+      />
       <Drawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        onSignInClick={() => { setDrawerOpen(false); setAuthOpen(true) }}
       />
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
       <main className="layout__main">
