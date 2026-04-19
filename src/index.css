@@ -3329,3 +3329,67 @@ img {
 }
 
 .shared-team__cta-btn:hover { opacity: 0.85; }
+
+/* ===========================
+   Item Recommendations
+   =========================== */
+.item-recommendations {
+  margin-bottom: 0.5rem;
+}
+
+.item-recommendations__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.item-recommendations__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.item-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.item-chip:hover {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+}
+
+.item-chip__sprite {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.item-chip--skeleton {
+  width: 80px;
+  height: 30px;
+  background: var(--border);
+  opacity: 0.4;
+  border: none;
+  border-radius: 20px;
+  animation: skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.2; }
+}

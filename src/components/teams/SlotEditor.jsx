@@ -5,6 +5,7 @@ import { usePokemon } from '../../hooks/usePokemon'
 import TypeBadge from '../TypeBadge'
 import MoveSearch from './MoveSearch'
 import ItemSearch from './ItemSearch'
+import ItemRecommendations from './ItemRecommendations'
 
 function useDebounce(value, delay) {
   const [debounced, setDebounced] = useState(value)
@@ -146,10 +147,15 @@ export default function SlotEditor({ slotIndex, slot, onChange, onClose }) {
 
       {/* Item */}
       {selectedPokemonName && (
-        <ItemSearch
-          selectedItem={slot?.item_id ? { id: slot.item_id, name: slot.item_name, sprite: slot.item_sprite } : null}
-          onChange={handleItemChange}
-        />
+        <>
+          {!slot?.item_id && (
+            <ItemRecommendations pokemon={pokemon} onSelect={handleItemChange} />
+          )}
+          <ItemSearch
+            selectedItem={slot?.item_id ? { id: slot.item_id, name: slot.item_name, sprite: slot.item_sprite } : null}
+            onChange={handleItemChange}
+          />
+        </>
       )}
     </div>
   )
