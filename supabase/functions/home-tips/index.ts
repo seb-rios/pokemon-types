@@ -1,8 +1,37 @@
 import Anthropic from 'npm:@anthropic-ai/sdk'
+import { createClient } from 'npm:@supabase/supabase-js'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+const DAILY_LIMIT = 10
+
+async function checkRateLimit(ip: string): Promise<boolean> {
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  )
+  const windowStart = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+
+  const { data } = await supabase
+    .from('ai_rate_limits')
+    .select('id, calls')
+    .eq('ip', ip)
+    .eq('function_name', 'home-tips')
+    .gte('window_start', windowStart)
+    .order('window_start', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (data) {
+    if (data.calls >= DAILY_LIMIT) return false
+    await supabase.from('ai_rate_limits').update({ calls: data.calls + 1 }).eq('id', data.id)
+  } else {
+    await supabase.from('ai_rate_limits').insert({ ip, function_name: 'home-tips' })
+  }
+  return true
 }
 
 Deno.serve(async (req) => {
@@ -11,6 +40,18 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim()
+      ?? req.headers.get('x-real-ip')
+      ?? 'unknown'
+
+    const allowed = await checkRateLimit(ip)
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ error: 'Daily limit reached. Try again tomorrow.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
     const { type } = await req.json()
 
     const client = new Anthropic({ apiKey: Deno.env.get('ANTHROPIC_API_KEY') })

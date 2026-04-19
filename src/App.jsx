@@ -9,6 +9,7 @@ import BattlePage from './pages/BattlePage'
 import TeamsPage from './pages/TeamsPage'
 import TeamBuilderPage from './pages/TeamBuilderPage'
 import SharedTeamPage from './pages/SharedTeamPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 const queryClient = new QueryClient()
 
@@ -27,6 +28,7 @@ export default function App() {
               <Route path="/teams/new" element={<TeamBuilderPage />} />
               <Route path="/teams/:id/edit" element={<TeamBuilderPage />} />
               <Route path="/teams/share/:shareToken" element={<SharedTeamPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Layout>
         </BrowserRouter>

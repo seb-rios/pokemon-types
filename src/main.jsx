@@ -5,19 +5,22 @@ import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 import { AuthProvider } from './context/AuthContext'
 import { UIProvider } from './context/UIContext'
+import ErrorBoundary from './components/ErrorBoundary'
 import App from './App.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HelmetProvider>
-      <AuthProvider>
-        <UIProvider>
-          <App />
-          <SpeedInsights />
-          <Analytics />
-        </UIProvider>
-      </AuthProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <UIProvider>
+            <App />
+            <SpeedInsights />
+            <Analytics />
+          </UIProvider>
+        </AuthProvider>
+      </ErrorBoundary>
     </HelmetProvider>
   </React.StrictMode>,
 )

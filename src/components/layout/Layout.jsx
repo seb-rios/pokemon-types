@@ -4,6 +4,8 @@ import Drawer from './Drawer'
 import AuthModal from '../auth/AuthModal'
 import OnboardingModal from '../onboarding/OnboardingModal'
 import { useUI } from '../../context/UIContext'
+import Footer from './Footer'
+import FeedbackModal from '../feedback/FeedbackModal'
 
 export default function Layout({ children }) {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -32,6 +34,8 @@ export default function Layout({ children }) {
       <main className="layout__main">
         {children}
       </main>
+      <Footer />
+      <FeedbackModal />
     </div>
   )
 }
