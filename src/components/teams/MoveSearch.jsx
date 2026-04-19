@@ -31,7 +31,13 @@ export default function MoveSearch({ pokemonId, selectedMoves, onChange }) {
         />
       </div>
 
-      {isLoading && <p className="move-search__loading">Loading moves…</p>}
+      {isLoading && (
+        <div className="move-search__list">
+          {Array(5).fill(null).map((_, i) => (
+            <div key={i} className="skeleton move-search__skeleton-row" />
+          ))}
+        </div>
+      )}
 
       <div className="move-search__list">
         {filtered.map(move => {

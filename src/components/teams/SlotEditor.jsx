@@ -100,7 +100,10 @@ export default function SlotEditor({ slotIndex, slot, onChange, onClose }) {
 
       {/* Pokémon search */}
       <div className="slot-editor__pokemon-row">
-        {spriteUrl && <img className="slot-editor__sprite" src={spriteUrl} alt={pokemon.name} />}
+        {spriteUrl
+          ? <img className="slot-editor__sprite" src={spriteUrl} alt={pokemon.name} />
+          : selectedPokemonName && <div className="skeleton slot-editor__skeleton-sprite" />
+        }
         <div className="slot-editor__search-wrap">
           <input
             ref={inputRef}
@@ -130,9 +133,12 @@ export default function SlotEditor({ slotIndex, slot, onChange, onClose }) {
       </div>
 
       {/* Type badges */}
-      {pokemon?.types && (
+      {selectedPokemonName && (
         <div className="slot-editor__types">
-          {pokemon.types.map(t => <TypeBadge key={t} type={t} size="sm" />)}
+          {pokemon?.types
+            ? pokemon.types.map(t => <TypeBadge key={t} type={t} size="sm" />)
+            : <><div className="skeleton slot-editor__skeleton-type" /><div className="skeleton slot-editor__skeleton-type" /></>
+          }
         </div>
       )}
 

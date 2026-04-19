@@ -393,6 +393,23 @@ img {
   opacity: 0.9;
 }
 
+.drawer__link--locked {
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+  font-family: inherit;
+  opacity: 0.6;
+}
+.drawer__link--locked:hover {
+  opacity: 1;
+  background: var(--border);
+  color: var(--text-primary);
+}
+.drawer__lock-icon {
+  margin-left: auto;
+}
+
 .drawer__footer {
   padding: 16px;
   border-top: 1px solid var(--border);
@@ -1383,6 +1400,24 @@ img {
   border-color: var(--accent);
 }
 
+.home-nav-card--locked {
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  opacity: 0.72;
+}
+.home-nav-card--locked:hover {
+  opacity: 1;
+  border-color: var(--accent);
+}
+.home-nav-card__lock {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: var(--text-secondary);
+}
+
 .home-nav-card__icon {
   color: var(--accent);
 }
@@ -1529,6 +1564,13 @@ img {
   font-style: italic;
 }
 
+.home-featured__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .home-featured__refresh {
   display: inline-flex;
   align-items: center;
@@ -1578,7 +1620,34 @@ img {
 .home-did-you-know__nav {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.home-featured__ask-ai,
+.home-did-you-know__ask-ai {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+.home-featured__ask-ai:hover,
+.home-did-you-know__ask-ai:hover {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.home-featured__ask-ai:disabled,
+.home-did-you-know__ask-ai:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .home-did-you-know__btn {
@@ -1708,13 +1777,15 @@ img {
 }
 
 @keyframes skeleton-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 0.25; }
+}
+
+.skeleton {
+  background: var(--border);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.2s ease-in-out infinite;
+  flex-shrink: 0;
 }
 
 /* ── Grid view (Show more expanded) ── */
@@ -3041,11 +3112,23 @@ img {
   margin-bottom: 1.5rem;
 }
 
+@media (min-width: 800px) {
+  .shared-team__slots {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 .shared-slot-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.shared-slot-card__top {
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
@@ -3084,8 +3167,8 @@ img {
 .shared-slot-card__moves {
   list-style: none;
   padding: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2px;
   margin-top: 2px;
 }
@@ -3383,13 +3466,29 @@ img {
   width: 80px;
   height: 30px;
   background: var(--border);
-  opacity: 0.4;
   border: none;
   border-radius: 20px;
   animation: skeleton-pulse 1.2s ease-in-out infinite;
 }
 
-@keyframes skeleton-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.2; }
-}
+/* ── Skeleton shape classes ── */
+.team-card--skeleton               { pointer-events: none; }
+.team-card__skeleton-name          { height: 18px; width: 110px; }
+.team-card__skeleton-btn           { width: 28px; height: 28px; border-radius: 6px; }
+.team-card__skeleton-type          { height: 20px; border-radius: 10px; }
+
+.shared-slot-card--skeleton              { pointer-events: none; }
+.shared-slot-card__skeleton-sprite       { width: 72px; height: 72px; border-radius: 8px; flex-shrink: 0; }
+.shared-slot-card__skeleton-name         { height: 14px; width: 80px; }
+.shared-slot-card__skeleton-type         { height: 20px; border-radius: 10px; }
+.shared-slot-card__skeleton-move         { height: 12px; border-radius: 4px; }
+
+.slot-editor__skeleton-sprite            { width: 56px; height: 56px; border-radius: 8px; }
+.slot-editor__skeleton-type              { height: 22px; width: 56px; border-radius: 10px; }
+
+.move-search__skeleton-row               { height: 38px; border-radius: 6px; margin-bottom: 4px; }
+
+.item-search__skeleton-row               { height: 34px; border-radius: 6px; margin-bottom: 2px; }
+
+.team-builder__skeleton-name             { height: 36px; border-radius: 8px; width: 220px; margin-bottom: 1rem; }
+.slot-grid__skeleton-slot                { height: 72px; border-radius: 10px; }

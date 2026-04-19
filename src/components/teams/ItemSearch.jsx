@@ -45,7 +45,9 @@ export default function ItemSearch({ selectedItem, onChange }) {
 
       {query && !selectedItem && (
         <div className="item-search__dropdown">
-          {isLoading && <p className="item-search__loading">Loading…</p>}
+          {isLoading && Array(3).fill(null).map((_, i) => (
+            <div key={i} className="skeleton item-search__skeleton-row" />
+          ))}
           {filtered.length === 0 && !isLoading && (
             <p className="item-search__empty">No items found</p>
           )}

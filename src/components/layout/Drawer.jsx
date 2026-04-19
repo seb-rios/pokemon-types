@@ -1,10 +1,14 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
-import { Grid3X3, Search, Sun, Moon, Swords, Home, Users } from 'lucide-react'
+import { Grid3X3, Search, Sun, Moon, Swords, Home, Users, Lock } from 'lucide-react'
 import { useTheme } from '../../context/ThemeContext'
+import { useAuth } from '../../context/AuthContext'
+import { useUI } from '../../context/UIContext'
 
 export default function Drawer({ isOpen, onClose }) {
   const { theme, toggleTheme } = useTheme()
+  const { user } = useAuth()
+  const { openAuthModal } = useUI()
 
   return (
     <AnimatePresence>
@@ -87,16 +91,27 @@ export default function Drawer({ isOpen, onClose }) {
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  to="/teams"
-                  className={({ isActive }) =>
-                    `drawer__link ${isActive ? 'drawer__link--active' : ''}`
-                  }
-                  onClick={onClose}
-                >
-                  <Users size={18} />
-                  <span>My Teams</span>
-                </NavLink>
+                {user ? (
+                  <NavLink
+                    to="/teams"
+                    className={({ isActive }) =>
+                      `drawer__link ${isActive ? 'drawer__link--active' : ''}`
+                    }
+                    onClick={onClose}
+                  >
+                    <Users size={18} />
+                    <span>My Teams</span>
+                  </NavLink>
+                ) : (
+                  <button
+                    className="drawer__link drawer__link--locked"
+                    onClick={() => { openAuthModal(); onClose() }}
+                  >
+                    <Users size={18} />
+                    <span>My Teams</span>
+                    <Lock size={14} className="drawer__lock-icon" />
+                  </button>
+                )}
               </li>
             </ul>
 

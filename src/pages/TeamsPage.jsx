@@ -8,6 +8,29 @@ import SEO from '../components/SEO'
 
 const FREE_TEAM_LIMIT = 4
 
+function TeamCardSkeleton() {
+  return (
+    <div className="team-card team-card--skeleton">
+      <div className="team-card__header">
+        <div className="skeleton team-card__skeleton-name" />
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[0, 1, 2].map(i => <div key={i} className="skeleton team-card__skeleton-btn" />)}
+        </div>
+      </div>
+      <div className="team-card__sprites">
+        {Array(6).fill(null).map((_, i) => (
+          <div key={i} className="skeleton team-card__empty-sprite" />
+        ))}
+      </div>
+      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+        {[52, 62, 48, 58].map((w, i) => (
+          <div key={i} className="skeleton team-card__skeleton-type" style={{ width: w }} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function TeamsPage() {
   const { user, loading } = useAuth()
   const navigate = useNavigate()
@@ -67,7 +90,9 @@ export default function TeamsPage() {
         {shareMsg && <div className="teams-page__toast">{shareMsg}</div>}
 
         {isLoading ? (
-          <p className="teams-page__loading">Loading your teams…</p>
+          <div className="teams-grid">
+            <TeamCardSkeleton /><TeamCardSkeleton /><TeamCardSkeleton />
+          </div>
         ) : teams.length === 0 ? (
           <div className="teams-page__empty">
             <p>No teams yet. Build your first team!</p>

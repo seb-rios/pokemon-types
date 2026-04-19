@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
-import { RefreshCw } from 'lucide-react'
+import { useState } from 'react'
+import { RefreshCw, Sparkles, RotateCcw } from 'lucide-react'
 import TypeBadge from '../TypeBadge'
+import { supabase } from '../../lib/supabase'
 
 const MATCHUPS = [
   { atk: 'fire', def: 'steel', multiplier: 2, desc: 'Fire melts through Steel defenses.' },
@@ -36,15 +37,28 @@ function getMultiplierClass(m) {
 
 export default function FeaturedMatchup() {
   const [index, setIndex] = useState(() => Math.floor(Math.random() * MATCHUPS.length))
+  const [aiMatchup, setAiMatchup] = useState(null)
+  const [aiLoading, setAiLoading] = useState(false)
 
-  const matchup = MATCHUPS[index]
+  const matchup = aiMatchup ?? MATCHUPS[index]
 
   function refresh() {
+    setAiMatchup(null)
     setIndex(i => {
       let next = Math.floor(Math.random() * MATCHUPS.length)
       if (next === i) next = (i + 1) % MATCHUPS.length
       return next
     })
+  }
+
+  async function askAI() {
+    setAiLoading(true)
+    try {
+      const { data, error } = await supabase.functions.invoke('home-tips', { body: { type: 'matchup' } })
+      if (!error && data?.matchup) setAiMatchup(data.matchup)
+    } catch {} finally {
+      setAiLoading(false)
+    }
   }
 
   return (
@@ -59,10 +73,23 @@ export default function FeaturedMatchup() {
         </span>
       </div>
       <p className="home-featured__desc">{matchup.desc}</p>
-      <button className="home-featured__refresh" onClick={refresh}>
-        <RefreshCw size={14} />
-        New matchup
-      </button>
+      <div className="home-featured__actions">
+        {aiMatchup ? (
+          <button className="home-featured__refresh" onClick={refresh}>
+            <RotateCcw size={14} />
+            Back to classics
+          </button>
+        ) : (
+          <button className="home-featured__refresh" onClick={refresh}>
+            <RefreshCw size={14} />
+            New matchup
+          </button>
+        )}
+        <button className="home-featured__ask-ai" onClick={askAI} disabled={aiLoading}>
+          <Sparkles size={13} />
+          {aiLoading ? 'Thinking…' : 'Ask AI'}
+        </button>
+      </div>
     </div>
   )
 }

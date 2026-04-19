@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { Grid3X3, Search, Swords } from 'lucide-react'
+import { Grid3X3, Search, Swords, Users, Lock } from 'lucide-react'
 import { motion } from 'framer-motion'
 import MiniTypeGrid from '../components/home/MiniTypeGrid'
 import FeaturedMatchup from '../components/home/FeaturedMatchup'
 import DidYouKnow from '../components/home/DidYouKnow'
 import SEO from '../components/SEO'
+import { useAuth } from '../context/AuthContext'
+import { useUI } from '../context/UIContext'
 
 const SILHOUETTES = [
   { id: 94,  alt: 'Gengar',   style: { top: '-20px', right: '-40px', width: '300px', opacity: 1 } },
@@ -34,8 +36,12 @@ const NAV_CARDS = [
   },
 ]
 
+const SPRING = { type: 'spring', stiffness: 300, damping: 20 }
+
 export default function HomePage() {
   const navigate = useNavigate()
+  const { user } = useAuth()
+  const { openAuthModal } = useUI()
 
   function handleTypeSelect(type) {
     navigate(`/types?type=${type}`)
@@ -70,11 +76,7 @@ export default function HomePage() {
 
           <div className="home-nav-cards">
             {NAV_CARDS.map(({ to, icon: Icon, title, desc }) => (
-              <motion.div
-                key={to}
-                whileHover={{ y: -4 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              >
+              <motion.div key={to} whileHover={{ y: -4 }} transition={SPRING}>
                 <Link to={to} className="home-nav-card">
                   <Icon size={22} className="home-nav-card__icon" />
                   <span className="home-nav-card__title">{title}</span>
@@ -82,6 +84,24 @@ export default function HomePage() {
                 </Link>
               </motion.div>
             ))}
+            {user ? (
+              <motion.div whileHover={{ y: -4 }} transition={SPRING}>
+                <Link to="/teams" className="home-nav-card">
+                  <Users size={22} className="home-nav-card__icon" />
+                  <span className="home-nav-card__title">My Teams</span>
+                  <span className="home-nav-card__desc">Build, save and analyze your Pokémon teams.</span>
+                </Link>
+              </motion.div>
+            ) : (
+              <motion.div whileHover={{ y: -4 }} transition={SPRING}>
+                <button className="home-nav-card home-nav-card--locked" onClick={openAuthModal}>
+                  <Users size={22} className="home-nav-card__icon" />
+                  <span className="home-nav-card__title">My Teams</span>
+                  <span className="home-nav-card__desc">Sign in to build and save teams.</span>
+                  <Lock size={14} className="home-nav-card__lock" />
+                </button>
+              </motion.div>
+            )}
           </div>
         </div>
       </section>

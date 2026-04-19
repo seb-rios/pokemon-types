@@ -3,13 +3,14 @@ import TopBar from './TopBar'
 import Drawer from './Drawer'
 import AuthModal from '../auth/AuthModal'
 import OnboardingModal from '../onboarding/OnboardingModal'
+import { useUI } from '../../context/UIContext'
 
 export default function Layout({ children }) {
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [authOpen, setAuthOpen] = useState(false)
   const [onboardingOpen, setOnboardingOpen] = useState(
     () => !localStorage.getItem('pokemon-types-onboarding-seen')
   )
+  const { authOpen, openAuthModal, closeAuthModal } = useUI()
 
   function handleOnboardingClose() {
     localStorage.setItem('pokemon-types-onboarding-seen', '1')
@@ -20,14 +21,14 @@ export default function Layout({ children }) {
     <div className="layout">
       <TopBar
         onMenuClick={() => setDrawerOpen(true)}
-        onSignInClick={() => setAuthOpen(true)}
+        onSignInClick={openAuthModal}
       />
       <Drawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
       <OnboardingModal isOpen={onboardingOpen} onClose={handleOnboardingClose} />
-      <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthModal isOpen={authOpen} onClose={closeAuthModal} />
       <main className="layout__main">
         {children}
       </main>

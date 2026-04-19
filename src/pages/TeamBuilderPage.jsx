@@ -30,7 +30,7 @@ export default function TeamBuilderPage() {
   const { id } = useParams()
   const isEdit = !!id
 
-  const { data: existingTeam } = useTeam(id)
+  const { data: existingTeam, isLoading: teamLoading } = useTeam(id)
   const createTeam = useCreateTeam()
   const updateTeam = useUpdateTeam()
   const isMobile = useIsMobile()
@@ -130,6 +130,19 @@ export default function TeamBuilderPage() {
   }
 
   if (loading || (!user && !loading)) return null
+
+  if (isEdit && teamLoading) {
+    return (
+      <div className="page">
+        <div className="skeleton team-builder__skeleton-name" />
+        <div className="slot-grid">
+          {Array(6).fill(null).map((_, i) => (
+            <div key={i} className="skeleton slot-grid__skeleton-slot" />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   const isSaving = createTeam.isPending || updateTeam.isPending
 
