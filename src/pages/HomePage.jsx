@@ -44,7 +44,7 @@ export default function HomePage() {
   return (
     <>
       <SEO
-        description="TypeDex is a Pokémon type effectiveness tool. Explore the 18-type chart, look up any Pokémon's weaknesses and resistances, and simulate type-advantage battles."
+        description="PokéTypeDex is a Pokémon type effectiveness tool. Explore the 18-type chart, look up any Pokémon's weaknesses and resistances, and simulate type-advantage battles."
       />
     <div className="home-page">
       {/* Hero */}

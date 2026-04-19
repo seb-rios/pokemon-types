@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-const SITE_NAME = 'TypeDex'
+const SITE_NAME = 'PokéTypeDex'
 const BASE_URL = 'https://www.poketypedex.com'
 const DEFAULT_IMAGE = `${BASE_URL}/og-image.png`
 

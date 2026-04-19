@@ -31,7 +31,7 @@ export default function TopBar({ onMenuClick, onSignInClick }) {
           <div className="topbar__pokeball-line" />
           <div className="topbar__pokeball-btn" />
         </div>
-        <span className="topbar__title">TypeDex</span>
+        <span className="topbar__title">PokéTypeDex</span>
       </Link>
 
       <div className="topbar__right">

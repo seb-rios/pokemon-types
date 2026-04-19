@@ -32,7 +32,7 @@ export default function Drawer({ isOpen, onClose }) {
                   <div className="drawer__pokeball-line" />
                   <div className="drawer__pokeball-btn" />
                 </div>
-                <span className="drawer__title">TypeDex</span>
+                <span className="drawer__title">PokéTypeDex</span>
               </div>
             </div>
 

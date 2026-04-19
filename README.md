@@ -1,4 +1,4 @@
-# TypeDex
+# PokéTypeDex
 
 A Pokemon type effectiveness app for web and mobile. Look up type matchups, search the Pokédex, and simulate battles — all in real time with no submit buttons.
 
