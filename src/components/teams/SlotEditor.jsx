@@ -111,7 +111,8 @@ export default function SlotEditor({ slotIndex, slot, onChange, onClose }) {
             placeholder="Search Pokémon…"
             value={query}
             onChange={e => { setQuery(e.target.value); setSelectedPokemonName(null) }}
-            autoFocus
+            autoComplete="off"
+            autoFocus={window.innerWidth >= 640}
           />
           {selectedPokemonName && (
             <button className="slot-editor__clear" onClick={clearPokemon} aria-label="Remove Pokémon">

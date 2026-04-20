@@ -7,15 +7,16 @@ const SIZE_CONFIG = {
   lg: { className: 'type-badge--lg', iconHeight: 24 },
 }
 
-export default function TypeBadge({ type, size = 'md' }) {
+export default function TypeBadge({ type, size = 'md', iconOnly = false }) {
   const color = TYPE_COLORS[type] || '#888'
   const icon = TYPE_ICONS[type]
   const { className, iconHeight } = SIZE_CONFIG[size] || SIZE_CONFIG.md
 
   return (
     <span
-      className={`type-badge ${className}`}
+      className={`type-badge ${className}${iconOnly ? ' type-badge--icon-only' : ''}`}
       style={{ backgroundColor: color }}
+      title={iconOnly ? type : undefined}
     >
       {icon && (
         <img
@@ -25,7 +26,7 @@ export default function TypeBadge({ type, size = 'md' }) {
           style={{ height: iconHeight, width: 'auto' }}
         />
       )}
-      <span className="type-badge__label">{type.toUpperCase()}</span>
+      {!iconOnly && <span className="type-badge__label">{type.toUpperCase()}</span>}
     </span>
   )
 }

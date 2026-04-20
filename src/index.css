@@ -483,6 +483,8 @@ img {
   padding: 4px 8px;
 }
 
+.type-badge--icon-only { padding: 4px; gap: 0; }
+
 .type-badge--md {
   font-size: 0.75rem;
   padding: 6px 12px;
@@ -2375,17 +2377,30 @@ img {
 }
 
 .team-card__sprite {
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   image-rendering: pixelated;
 }
 
 .team-card__empty-sprite {
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: var(--bg-secondary);
   border: 1px dashed var(--border);
+}
+
+.team-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 2px;
+}
+
+.team-card__member-count {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-weight: 600;
 }
 
 .team-card__types {

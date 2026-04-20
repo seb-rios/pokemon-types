@@ -15,6 +15,7 @@ function MiniSprite({ id }) {
 
 export default function TeamCard({ team, onDelete, onShare }) {
   const slots = team.team_slots ?? []
+  const filledCount = slots.filter(s => s?.pokemon_id).length
 
   return (
     <div className="team-card">
@@ -39,11 +40,15 @@ export default function TeamCard({ team, onDelete, onShare }) {
         ))}
       </div>
 
+      <div className="team-card__meta">
+        <span className="team-card__member-count">{filledCount}/6</span>
+      </div>
+
       <div className="team-card__types">
         {slots.flatMap(s => s.pokemon_types ?? [])
           .filter((t, i, arr) => arr.indexOf(t) === i)
           .slice(0, 8)
-          .map(t => <TypeBadge key={t} type={t} size="sm" />)}
+          .map(t => <TypeBadge key={t} type={t} size="sm" iconOnly />)}
       </div>
     </div>
   )
