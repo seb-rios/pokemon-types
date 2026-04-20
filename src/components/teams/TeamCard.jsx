@@ -15,8 +15,6 @@ function MiniSprite({ id }) {
 
 export default function TeamCard({ team, onDelete, onShare }) {
   const slots = team.team_slots ?? []
-  const filledCount = slots.filter(s => s?.pokemon_id).length
-
   return (
     <div className="team-card">
       <div className="team-card__header">
@@ -38,10 +36,6 @@ export default function TeamCard({ team, onDelete, onShare }) {
         {Array.from({ length: 6 }).map((_, i) => (
           <MiniSprite key={i} id={slots[i]?.pokemon_id} />
         ))}
-      </div>
-
-      <div className="team-card__meta">
-        <span className="team-card__member-count">{filledCount}/6</span>
       </div>
 
       <div className="team-card__types">
