@@ -1,4 +1,23 @@
 import { Sparkles, AlertTriangle } from 'lucide-react'
+import TypeBadge from '../TypeBadge'
+
+const ALL_TYPES = ['fire','water','grass','electric','ice','fighting','poison',
+  'ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal']
+
+function GapItem({ text }) {
+  const lower = text.toLowerCase()
+  const found = ALL_TYPES.filter(t => lower.includes(t))
+  return (
+    <li className="ai-gap-item">
+      {found.length > 0 && (
+        <div className="ai-gap-badges">
+          {found.map(t => <TypeBadge key={t} type={t} size="sm" />)}
+        </div>
+      )}
+      <span className="ai-gap-text">{text}</span>
+    </li>
+  )
+}
 
 export default function AIAnalysisPanel({ analysis, isLoading }) {
   if (isLoading) {
@@ -27,7 +46,7 @@ export default function AIAnalysisPanel({ analysis, isLoading }) {
             <AlertTriangle size={14} /> Type Gaps
           </h4>
           <ul className="ai-analysis-list">
-            {analysis.type_gaps.map((gap, i) => <li key={i}>{gap}</li>)}
+            {analysis.type_gaps.map((gap, i) => <GapItem key={i} text={gap} />)}
           </ul>
         </div>
       )}

@@ -37,6 +37,7 @@ export default function TeamBuilderPage() {
 
   const [teamName, setTeamName] = useState('My Team')
   const [slots, setSlots] = useState(EMPTY_SLOTS)
+  const [slotsReady, setSlotsReady] = useState(!isEdit)
   const [activeSlot, setActiveSlot] = useState(null)
   const [wizardStep, setWizardStep] = useState(0)
   const [aiAnalysis, setAiAnalysis] = useState(null)
@@ -57,6 +58,7 @@ export default function TeamBuilderPage() {
         return s ?? null
       })
       setSlots(loaded)
+      setSlotsReady(true)
     }
   }, [existingTeam])
 
@@ -131,7 +133,7 @@ export default function TeamBuilderPage() {
 
   if (loading || (!user && !loading)) return null
 
-  if (isEdit && teamLoading) {
+  if (isEdit && (teamLoading || !slotsReady)) {
     return (
       <div className="page">
         <div className="skeleton team-builder__skeleton-name" />

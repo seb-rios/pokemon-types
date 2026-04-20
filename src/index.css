@@ -3663,6 +3663,84 @@ img {
   margin-bottom: 0.5rem;
 }
 
+/* ── Mobile UX: prevent iOS input zoom + minimum tap targets ── */
+@media (max-width: 640px) {
+  .slot-editor__search,
+  .move-search__input,
+  .item-search__input,
+  .auth-input,
+  .feedback-modal__textarea {
+    font-size: 16px;
+  }
+
+  .move-search__item       { min-height: 44px; }
+  .item-search__option     { min-height: 44px; padding: 0 14px; }
+  .slot-wizard__nav-btn    { min-height: 44px; padding: 0 20px; }
+  .slot-wizard__dot        { width: 14px; height: 14px; }
+  .slot-editor__search     { min-height: 44px; }
+  .item-chip               { min-height: 36px; padding: 0 12px; }
+  .slot-editor             { padding: 1rem; }
+  .move-search__list       { max-height: 280px; overflow-y: auto; }
+  .move-search__item       { padding: 10px 12px; }
+  .item-search__dropdown   { max-height: 220px; overflow-y: auto; }
+}
+
+/* ── Type Coverage Panel (badge grid layout) ── */
+.type-coverage-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.type-coverage-col__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+.type-coverage-col__label--weak   { color: #ef4444; }
+.type-coverage-col__label--strong { color: #22c55e; }
+.type-coverage-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.type-coverage-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.type-coverage-badge-count {
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.type-coverage-badge-count--weak   { color: #ef4444; }
+.type-coverage-badge-count--strong { color: #22c55e; }
+.type-coverage-none {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* ── AI Analysis: gap items with type badges ── */
+.ai-gap-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.ai-gap-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ai-gap-text {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
 /* ── Skeleton shape classes ── */
 .team-card--skeleton               { pointer-events: none; }
 .team-card__skeleton-name          { height: 18px; width: 110px; }

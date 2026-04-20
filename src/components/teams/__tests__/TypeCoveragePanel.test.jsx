@@ -39,11 +39,11 @@ describe('TypeCoveragePanel', () => {
     expect(screen.queryByText(/Critical weaknesses/i)).toBeNull()
   })
 
-  it('renders 18 type rows', () => {
+  it('renders weak-against and strong-against sections', () => {
     const slots = [{ pokemon_types: ['fire'] }, ...Array(5).fill(null)]
-    const { container } = render(<TypeCoveragePanel slots={slots} />)
-    const rows = container.querySelectorAll('.type-coverage-row')
-    expect(rows).toHaveLength(18)
+    render(<TypeCoveragePanel slots={slots} />)
+    expect(screen.getByText(/Weak against/i)).toBeInTheDocument()
+    expect(screen.getByText(/Strong against/i)).toBeInTheDocument()
   })
 
   it('handles mixed null/filled slots without crashing', () => {
